@@ -7,4 +7,3 @@ It is based on the [Basic Symmetry454 and Symmetry010 Calendar Arithmetic](http:
 ### Roadmap:
 - Add Tests
 - Create data types for Symmetry454 dates.
-- Place all functions related to Gregorian dates into a seperate file.

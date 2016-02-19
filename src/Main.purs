@@ -2,6 +2,7 @@ module Main where
 
 import Control.Monad.Eff (Eff())
 import Data.Date (Now(), now)
+import Data.Date.Gregorian (toFixed)
 import Data.Date.Locale (Locale(), toLocaleDateString) as L
 import Data.Date.Symmetry454
 import Data.DOM.Simple.Unsafe.Element (
@@ -21,7 +22,7 @@ import Prelude
 main :: forall eff. Eff (dom :: DOM, locale :: L.Locale, now :: Now | eff) Unit
 main = do
     gregorian <- now >>= L.toLocaleDateString
-    fixed     <- now >>= gregorianToFixed
+    fixed     <- now >>= toFixed
     querySelector "#gregorian"   >>= unsafeSetTextContent gregorian
     querySelector "#symmetry454" >>= unsafeSetTextContent (fixedToSym fixed)
 

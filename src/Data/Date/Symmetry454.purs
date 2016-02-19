@@ -1,23 +1,15 @@
 module Data.Date.Symmetry454 (
     checkForLeapWeek,
-    deductLeapDays,
     estimateSymYear,
     fixedToSym,
     fixedToSymYear,
-    gregorianToFixed,
-    gregorianOrdinalDay,
-    isGregorianLeap,
     isSymLeap,
-    priorElapsedDays,
     symDayToMonth,
     symMonthToDay,
     symNewYearDay
 ) where
 
-import Control.Monad.Eff (Eff())
-import Data.Date (Date(), DayOfMonth(..), Month(), Year(..))
-import Data.Date.Locale (Locale(), dayOfMonth, month, year) as L
-import Data.Enum (fromEnum)
+import Data.Date (Year(..))
 import Data.Int (ceil, floor, toNumber)
 import Math ((%))
 import Prelude
@@ -32,13 +24,6 @@ checkForLeapWeek fixed start = do
     if fixed - start >= 364 && fixed >= symNewYearDay(nextYear)
         then nextYear
         else estimateSymYear fixed
-
-{-|
-  | deductLeapDays deducts either one or two days from the ordinal day number if
-  | the current Gregorian year is a leap year.
--}
-deductLeapDays :: Year -> Int -> Int
-deductLeapDays year days = if isGregorianLeap year then days - 1 else days - 2
 
 {-|
   | estimateSymYear estimates the Symmetry454 calendar year given a fixed date
@@ -72,52 +57,12 @@ fixedToSymYear fixed start
     | otherwise      = estimateSymYear fixed
 
 {-|
-  | gregorianOrdinalDay calculates the ordinal day number within the Gregorian
-  | year.
--}
-gregorianOrdinalDay :: Year -> Month -> DayOfMonth -> Int
-gregorianOrdinalDay year month day = do
-    let d           = case day of DayOfMonth x -> x
-    let monthNumber = fromEnum month + 1
-    let ordinal     = floor(toNumber(367 * monthNumber - 362) / 12.0) + d
-    if monthNumber > 2 then deductLeapDays year ordinal else ordinal
-
-{-|
-  | gregorianToFixed converts a Gregorian date to a fixed number of dates
--}
-gregorianToFixed :: forall eff. Date -> Eff (locale :: L.Locale | eff) Int
-gregorianToFixed date = do
-    year  <- L.year date
-    month <- L.month date
-    day   <- L.dayOfMonth date
-    return $ priorElapsedDays year + gregorianOrdinalDay year month day
-
-{-|
-  | isGregorianLeap checks if the provided year is a leap year in the Gregorian
-  | calendar.
--}
-isGregorianLeap :: Year -> Boolean
-isGregorianLeap year = do
-    let y = case year of Year x -> toNumber x
-    y % 4.0 == 0.0 && (y % 100.0 /= 0.0 || y % 400.0 == 0.0)
-
-{-|
   | isSymLeap checks if the provided year is a leap year in the Symmetry454
   | calendar.
 -}
 isSymLeap :: Year -> Boolean
 isSymLeap year = (52.0 * y + 146.0) % 293.0 < 52.0 where
     y = case year of Year x -> toNumber x
-
-{-|
-  | priorElapsedDays calculates the number of days that have elapsed from the
-  | Gregorian epoch until the beginning of the New Year Day of the specified
-  | Gregorian year number.
--}
-priorElapsedDays :: Year -> Int
-priorElapsedDays year = do
-    let p = case year of Year x -> toNumber $ x - 1
-    floor(p) * 365 + floor(p / 4.0) - floor(p / 100.0) + floor(p / 400.0)
 
 {-|
   | symDayToMonth returns the current month of the Symmetry454 calendar given
