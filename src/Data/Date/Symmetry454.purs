@@ -59,14 +59,14 @@ toString date = do
     let dayOfYear  = case date - (toNewYearDay year) of Date n -> n + 1
     let month      = daysToMonth dayOfYear
     let day        = dayOfMonth dayOfYear month
-    let weekday    = weekdayString dayOfYear
+    let weekday    = weekdayString day
     weekday ++ ", " ++ show month ++ "/" ++ show day ++ "/" ++ show year
 
 {-|
   | weekdayString returns the current weekday of a fixed day date.
 -}
 weekdayString :: Int -> String
-weekdayString dayOfYear = case floor $ toNumber dayOfYear % 7.0 of
+weekdayString day = case floor $ toNumber day % 7.0 of
     0 -> "Sunday"
     1 -> "Monday"
     2 -> "Tuesday"
