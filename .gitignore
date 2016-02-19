@@ -12,6 +12,7 @@ node_modules
 
 # Pulp
 .pulp-cache
+main.js
 
 # Generated files
 .psci
