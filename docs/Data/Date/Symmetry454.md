@@ -24,6 +24,10 @@ estimateSymYear :: Int -> Year
 fixedToSym :: Int -> String
 ```
 
+
+fixedToSym converts any fixed day number to the corresponding Symmetry454
+calendar date.
+
 #### `fixedToSymYear`
 
 ``` purescript

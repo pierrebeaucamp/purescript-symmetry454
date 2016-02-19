@@ -23,9 +23,9 @@ import Math ((%))
 import Prelude
 
 {-|
-    checkForLeapWeek gets called if fixedToSymYear holds no simple solution.
-    In this case, the provided fixed day number might be in a leap week.
--}
+  | checkForLeapWeek gets called if fixedToSymYear holds no simple solution.
+  | In this case, the provided fixed day number might be in a leap week.
+ -}
 checkForLeapWeek :: Int -> Int -> Year
 checkForLeapWeek fixed start = do
     let nextYear = estimateSymYear fixed + Year 1
@@ -34,23 +34,23 @@ checkForLeapWeek fixed start = do
         else estimateSymYear fixed
 
 {-|
-    deductLeapDays deducts either one or two days from the ordinal day number if
-    the current Gregorian year is a leap year.
--}
+  | deductLeapDays deducts either one or two days from the ordinal day number if
+  | the current Gregorian year is a leap year.
+ -}
 deductLeapDays :: Year -> Int -> Int
 deductLeapDays year days = if isGregorianLeap year then days - 1 else days - 2
 
 {-|
-    estimateSymYear estimates the Symmetry454 calendar year given a fixed date
-    number.
--}
+  | estimateSymYear estimates the Symmetry454 calendar year given a fixed date
+  | number.
+ -}
 estimateSymYear :: Int -> Year
 estimateSymYear fixed = Year $ ceil $ (f - 1.0) / (365.0 + 71.0 / 293.0) where
     f = toNumber fixed
 
 {-|
-    fixedToSym converts any fixed day number to the corresponding Symmetry454
-    calendar date.
+  | fixedToSym converts any fixed day number to the corresponding Symmetry454
+  | calendar date.
 -}
 fixedToSym :: Int -> String
 fixedToSym fixed = show month ++ "/" ++ show day ++ "/" ++ yearString where
@@ -61,10 +61,10 @@ fixedToSym fixed = show month ++ "/" ++ show day ++ "/" ++ yearString where
     yearString = case year of Year x -> show x
 
 {-|
-    fixedToSymYear returns the current year in the Symmetry454 calendar that
-    contains a given fixed day number. It takes a fixed day number and a number
-    pointing to the start of a year
--}
+  | fixedToSymYear returns the current year in the Symmetry454 calendar that
+  | contains a given fixed day number. It takes a fixed day number and a number
+  | pointing to the start of a year
+ -}
 fixedToSymYear :: Int -> Int -> Year
 fixedToSymYear fixed start
     | fixed < start  = estimateSymYear fixed - Year 1
@@ -72,9 +72,9 @@ fixedToSymYear fixed start
     | otherwise      = estimateSymYear fixed
 
 {-|
-    gregorianOrdinalDay calculates the ordinal day number within the Gregorian
-    year.
--}
+  | gregorianOrdinalDay calculates the ordinal day number within the Gregorian
+  | year.
+ -}
 gregorianOrdinalDay :: Year -> Month -> DayOfMonth -> Int
 gregorianOrdinalDay year month day = do
     let d           = case day of DayOfMonth x -> x
@@ -83,8 +83,8 @@ gregorianOrdinalDay year month day = do
     if monthNumber > 2 then deductLeapDays year ordinal else ordinal
 
 {-|
-    gregorianToFixed converts a Gregorian date to a fixed number of dates
--}
+  | gregorianToFixed converts a Gregorian date to a fixed number of dates
+ -}
 gregorianToFixed :: forall eff. Date -> Eff (locale :: L.Locale | eff) Int
 gregorianToFixed date = do
     year  <- L.year date
@@ -93,36 +93,36 @@ gregorianToFixed date = do
     return $ priorElapsedDays year + gregorianOrdinalDay year month day
 
 {-|
-    isGregorianLeap checks if the provided year is a leap year in the Gregorian
-    calendar.
--}
+  | isGregorianLeap checks if the provided year is a leap year in the Gregorian
+  | calendar.
+ -}
 isGregorianLeap :: Year -> Boolean
 isGregorianLeap year = do
     let y = case year of Year x -> toNumber x
     y % 4.0 == 0.0 && (y % 100.0 /= 0.0 || y % 400.0 == 0.0)
 
 {-|
-    isSymLeap checks if the provided year is a leap year in the Symmetry454
-    calendar.
--}
+  | isSymLeap checks if the provided year is a leap year in the Symmetry454
+  | calendar.
+ -}
 isSymLeap :: Year -> Boolean
 isSymLeap year = (52.0 * y + 146.0) % 293.0 < 52.0 where
     y = case year of Year x -> toNumber x
 
 {-|
-    priorElapsedDays calculates the number of days that have elapsed from the
-    Gregorian epoch until the beginning of the New Year Day of the specified
-    Gregorian year number.
--}
+  | priorElapsedDays calculates the number of days that have elapsed from the
+  | Gregorian epoch until the beginning of the New Year Day of the specified
+  | Gregorian year number.
+ -}
 priorElapsedDays :: Year -> Int
 priorElapsedDays year = do
     let p = case year of Year x -> toNumber $ x - 1
     floor(p) * 365 + floor(p / 4.0) - floor(p / 100.0) + floor(p / 400.0)
 
 {-|
-    symDayToMonth returns the current month of the Symmetry454 calendar given
-    the ordinal number of days in a year.
--}
+  | symDayToMonth returns the current month of the Symmetry454 calendar given
+  | the ordinal number of days in a year.
+ -}
 symDayToMonth :: Int -> Int
 symDayToMonth dayOfYear = 3 * quarter + monthOfQuarter - 3 where
     weekOfYear     = ceil $ toNumber(dayOfYear) / 7.0
@@ -132,16 +132,16 @@ symDayToMonth dayOfYear = 3 * quarter + monthOfQuarter - 3 where
     monthOfQuarter = ceil $ 2.0 / 9.0 * toNumber(weekOfQuarter)
 
 {-|
-    symMonthToDay returns the current day of a Symmetry454 month. It takes the
-    ordinal number of days of the current year and the current month.
--}
+  | symMonthToDay returns the current day of a Symmetry454 month. It takes the
+  | ordinal number of days of the current year and the current month.
+ -}
 symMonthToDay :: Int -> Int -> Int
 symMonthToDay dayOfYear month = dayOfYear - daysBefore where
     daysBefore = 28 * month + 7 * month / 3 - 28
 
 {-|
-    symNewYearDay returns the fixed day number of the New Year Day.
--}
+  | symNewYearDay returns the fixed day number of the New Year Day.
+ -}
 symNewYearDay :: Year -> Int
 symNewYearDay year = 1 + 364 * p + 7 * (52 * p + 146) / 293 where
     p = case year of Year x -> x - 1
