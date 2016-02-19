@@ -777,11 +777,7 @@ var PS = { };
   var Data_Date = PS["Data.Date"];
   var Data_Date_Locale = PS["Data.Date.Locale"];
   var Data_Enum = PS["Data.Enum"];
-  var Data_DOM_Simple_Unsafe_Element = PS["Data.DOM.Simple.Unsafe.Element"];
-  var Data_DOM_Simple_Unsafe_Window = PS["Data.DOM.Simple.Unsafe.Window"];
-  var Data_DOM_Simple_Window = PS["Data.DOM.Simple.Window"];
   var Data_Int = PS["Data.Int"];
-  var DOM = PS["DOM"];
   var $$Math = PS["Math"];
   var Prelude = PS["Prelude"];     
   var symNewYearDay = function (year) {
@@ -802,16 +798,9 @@ var PS = { };
       var monthOfQuarter = Data_Int.ceil((2.0 / 9.0) * Data_Int.toNumber(weekOfQuarter));
       return ((3 * quarter | 0) + monthOfQuarter | 0) - 3;
   };
-  var querySelector = function (query) {
-      return Prelude[">>="](Control_Monad_Eff.bindEff)(Data_DOM_Simple_Unsafe_Window.unsafeDocument(Data_DOM_Simple_Window.globalWindow))(Data_DOM_Simple_Unsafe_Element.unsafeQuerySelector(query));
-  };
   var priorElapsedDays = function (year) {
       var p = Data_Int.toNumber(year - 1);
       return (((Data_Int.floor(p) * 365 | 0) + Data_Int.floor(p / 4.0) | 0) - Data_Int.floor(p / 100.0)) + Data_Int.floor(p / 400.0) | 0;
-  };
-  var isSymLeap = function (year) {
-      var y = Data_Int.toNumber(year);
-      return $$Math["%"](52.0 * y + 146.0)(293.0) < 52.0;
   };
   var isGregorianLeap = function (year) {
       var y = Data_Int.toNumber(year);
@@ -823,14 +812,14 @@ var PS = { };
   };
   var deductLeapDays = function (year) {
       return function (days) {
-          var _9 = isGregorianLeap(year);
-          if (_9) {
+          var _7 = isGregorianLeap(year);
+          if (_7) {
               return days - 1;
           };
-          if (!_9) {
+          if (!_7) {
               return days - 2;
           };
-          throw new Error("Failed pattern match at Main line 40, column 1 - line 41, column 1: " + [ _9.constructor.name ]);
+          throw new Error("Failed pattern match at Data.Date.Symmetry454 line 40, column 1 - line 41, column 1: " + [ _7.constructor.name ]);
       };
   };
   var gregorianOrdinalDay = function (year) {
@@ -838,14 +827,14 @@ var PS = { };
           return function (day) {
               var monthNumber = Data_Enum.fromEnum(Data_Date.enumMonth)(month) + 1 | 0;
               var ordinal = Data_Int.floor(Data_Int.toNumber((367 * monthNumber | 0) - 362) / 12.0) + day | 0;
-              var _11 = monthNumber > 2;
-              if (_11) {
+              var _9 = monthNumber > 2;
+              if (_9) {
                   return deductLeapDays(year)(ordinal);
               };
-              if (!_11) {
+              if (!_9) {
                   return ordinal;
               };
-              throw new Error("Failed pattern match at Main line 78, column 1 - line 79, column 1: " + [ _11.constructor.name ]);
+              throw new Error("Failed pattern match at Data.Date.Symmetry454 line 78, column 1 - line 79, column 1: " + [ _9.constructor.name ]);
           };
       };
   };
@@ -860,14 +849,14 @@ var PS = { };
   var checkForLeapWeek = function (fixed) {
       return function (start) {
           var nextYear = Prelude["+"](Data_Date.semiringYear)(estimateSymYear(fixed))(1);
-          var _15 = fixed - start >= 364 && fixed >= symNewYearDay(nextYear);
-          if (_15) {
+          var _13 = fixed - start >= 364 && fixed >= symNewYearDay(nextYear);
+          if (_13) {
               return nextYear;
           };
-          if (!_15) {
+          if (!_13) {
               return estimateSymYear(fixed);
           };
-          throw new Error("Failed pattern match at Main line 29, column 1 - line 30, column 1: " + [ _15.constructor.name ]);
+          throw new Error("Failed pattern match at Data.Date.Symmetry454 line 29, column 1 - line 30, column 1: " + [ _13.constructor.name ]);
       };
   };
   var fixedToSymYear = function (fixed) {
@@ -881,7 +870,7 @@ var PS = { };
           if (Prelude.otherwise) {
               return estimateSymYear(fixed);
           };
-          throw new Error("Failed pattern match at Main line 68, column 1 - line 69, column 1: " + [ fixed.constructor.name, start.constructor.name ]);
+          throw new Error("Failed pattern match at Data.Date.Symmetry454 line 68, column 1 - line 69, column 1: " + [ fixed.constructor.name, start.constructor.name ]);
       };
   };
   var fixedToSym = function (fixed) {
@@ -892,27 +881,43 @@ var PS = { };
       var day = symMonthToDay(dayOfYear)(month);
       return Prelude.show(Prelude.showInt)(month) + ("/" + (Prelude.show(Prelude.showInt)(day) + ("/" + yearString)));
   };
-  var main = function __do() {
-      var _4 = Prelude[">>="](Control_Monad_Eff.bindEff)(Data_Date.now)(Data_Date_Locale.toLocaleDateString)();
-      var _3 = Prelude[">>="](Control_Monad_Eff.bindEff)(Data_Date.now)(gregorianToFixed)();
-      Prelude[">>="](Control_Monad_Eff.bindEff)(querySelector("#gregorian"))(Data_DOM_Simple_Unsafe_Element.unsafeSetTextContent(_4))();
-      return Prelude[">>="](Control_Monad_Eff.bindEff)(querySelector("#symmetry454"))(Data_DOM_Simple_Unsafe_Element.unsafeSetTextContent(fixedToSym(_3)))();
-  };
   exports["symNewYearDay"] = symNewYearDay;
   exports["symMonthToDay"] = symMonthToDay;
   exports["symDayToMonth"] = symDayToMonth;
-  exports["querySelector"] = querySelector;
   exports["priorElapsedDays"] = priorElapsedDays;
-  exports["main"] = main;
-  exports["isSymLeap"] = isSymLeap;
   exports["isGregorianLeap"] = isGregorianLeap;
-  exports["gregorianToFixed"] = gregorianToFixed;
   exports["gregorianOrdinalDay"] = gregorianOrdinalDay;
+  exports["gregorianToFixed"] = gregorianToFixed;
   exports["fixedToSymYear"] = fixedToSymYear;
   exports["fixedToSym"] = fixedToSym;
   exports["estimateSymYear"] = estimateSymYear;
   exports["deductLeapDays"] = deductLeapDays;
   exports["checkForLeapWeek"] = checkForLeapWeek;;
+ 
+})(PS["Data.Date.Symmetry454"] = PS["Data.Date.Symmetry454"] || {});
+(function(exports) {
+  // Generated by psc version 0.7.6.1
+  "use strict";
+  var Control_Monad_Eff = PS["Control.Monad.Eff"];
+  var Data_Date = PS["Data.Date"];
+  var Data_Date_Locale = PS["Data.Date.Locale"];
+  var Data_Date_Symmetry454 = PS["Data.Date.Symmetry454"];
+  var Data_DOM_Simple_Unsafe_Element = PS["Data.DOM.Simple.Unsafe.Element"];
+  var Data_DOM_Simple_Unsafe_Window = PS["Data.DOM.Simple.Unsafe.Window"];
+  var Data_DOM_Simple_Window = PS["Data.DOM.Simple.Window"];
+  var DOM = PS["DOM"];
+  var Prelude = PS["Prelude"];     
+  var querySelector = function (query) {
+      return Prelude[">>="](Control_Monad_Eff.bindEff)(Data_DOM_Simple_Unsafe_Window.unsafeDocument(Data_DOM_Simple_Window.globalWindow))(Data_DOM_Simple_Unsafe_Element.unsafeQuerySelector(query));
+  };
+  var main = function __do() {
+      var _1 = Prelude[">>="](Control_Monad_Eff.bindEff)(Data_Date.now)(Data_Date_Locale.toLocaleDateString)();
+      var _0 = Prelude[">>="](Control_Monad_Eff.bindEff)(Data_Date.now)(Data_Date_Symmetry454.gregorianToFixed)();
+      Prelude[">>="](Control_Monad_Eff.bindEff)(querySelector("#gregorian"))(Data_DOM_Simple_Unsafe_Element.unsafeSetTextContent(_1))();
+      return Prelude[">>="](Control_Monad_Eff.bindEff)(querySelector("#symmetry454"))(Data_DOM_Simple_Unsafe_Element.unsafeSetTextContent(Data_Date_Symmetry454.fixedToSym(_0)))();
+  };
+  exports["querySelector"] = querySelector;
+  exports["main"] = main;;
  
 })(PS["Main"] = PS["Main"] || {});
 
