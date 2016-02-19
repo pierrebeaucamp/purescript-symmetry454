@@ -8,6 +8,7 @@ module Data.Date.Gregorian (
 
 import Control.Monad.Eff (Eff())
 import Data.Date (Date(), DayOfMonth(..), Month(), Year(..))
+import Data.Date.Fixed (Date(..)) as Fixed
 import Data.Date.Locale (Locale(), dayOfMonth, month, year) as L
 import Data.Enum (fromEnum)
 import Data.Int (floor, toNumber)
@@ -45,12 +46,12 @@ priorElapsedDays year = do
 {-|
   | toFixed converts a Gregorian date to a fixed number of dates
 -}
-toFixed :: forall eff. Date -> Eff (locale :: L.Locale | eff) Int
+toFixed :: forall eff. Date -> Eff (locale :: L.Locale | eff) Fixed.Date
 toFixed date = do
     year  <- L.year date
     month <- L.month date
     day   <- L.dayOfMonth date
-    return $ priorElapsedDays year + ordinalDays year month day
+    return $ Fixed.Date $ priorElapsedDays year + ordinalDays year month day
 
 {-|
   | isLeap checks if the provided year is a leap year.

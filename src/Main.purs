@@ -3,7 +3,7 @@ module Main where
 import Control.Monad.Eff (Eff())
 import Data.Date (Now(), now)
 import Data.Date.Gregorian (toFixed)
-import Data.Date.Locale (Locale(), toLocaleDateString) as L
+import Data.Date.Locale (Locale(), dayOfWeek, toLocaleDateString) as L
 import Data.Date.Symmetry454
 import Data.DOM.Simple.Unsafe.Element (
     HTMLElement(),
@@ -22,9 +22,11 @@ import Prelude
 main :: forall eff. Eff (dom :: DOM, locale :: L.Locale, now :: Now | eff) Unit
 main = do
     gregorian <- now >>= L.toLocaleDateString
+    weekday   <- now >>= L.dayOfWeek
     fixed     <- now >>= toFixed
-    querySelector "#gregorian"   >>= unsafeSetTextContent gregorian
-    querySelector "#symmetry454" >>= unsafeSetTextContent (fixedToSym fixed)
+    let output = show weekday ++ ", " ++ gregorian
+    querySelector "#gregorian"   >>= unsafeSetTextContent output
+    querySelector "#symmetry454" >>= unsafeSetTextContent (toString fixed)
 
 {-|
   | querySelector is a shorthand function to select an element from the global
