@@ -2,6 +2,6 @@
     "lang"       : "en",
     "short_name" : "Symmetry454",
     "name"       : "Symmetry454 Converter",
-    "start_url"  : "/index.html",
+    "start_url"  : "/purescript-symmetry454/index.html",
     "display"    : "standalone"
 }
