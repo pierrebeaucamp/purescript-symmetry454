@@ -1,0 +1,7 @@
+{
+    "lang"       : "en",
+    "short_name" : "Symmetry454",
+    "name"       : "Symmetry454 Converter",
+    "start_url"  : "/index.html",
+    "display"    : "standalone"
+}
